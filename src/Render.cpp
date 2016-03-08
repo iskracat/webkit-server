@@ -13,15 +13,7 @@ void Render::start() {
 
   QSize size(width, height);
 
-  bool result = page()->render( imagePath, size );
+  QString result = page()->render( imagePath, size );
 
-  if (result) {
-    finish(true);
-  } else {
-    const QString failure = QString("Unable to save %1x%2 image to %3").
-      arg(width).
-      arg(height).
-      arg(imagePath);
-    finish(false, new ErrorMessage(failure));
-  }
+  finish(true, result);
 }

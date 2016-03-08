@@ -228,7 +228,7 @@ bool WebPage::clickTest(QWebElement element, int absoluteX, int absoluteY) {
   return res.frame() == element.webFrame();
 }
 
-bool WebPage::render(const QString &fileName, const QSize &minimumSize) {
+QString WebPage::render(const QString &fileName, const QSize &minimumSize) {
   QFileInfo fileInfo(fileName);
   QDir dir;
   dir.mkpath(fileInfo.absolutePath());
@@ -257,7 +257,14 @@ bool WebPage::render(const QString &fileName, const QSize &minimumSize) {
   p.end();
   this->setViewportSize(viewportSize);
 
-  return buffer.save(fileName);
+  QByteArray byteArray;
+  QBuffer buffer2(&byteArray);
+  buffer.save(&buffer2, "PNG");
+  QString iconBase64 = QString::fromLatin1(byteArray.toBase64().data());
+
+  buffer.save(fileName);
+
+  return iconBase64;
 }
 
 QString WebPage::chooseFile(QWebFrame *parentFrame, const QString &suggestedFile) {
@@ -372,4 +379,3 @@ void WebPage::setPromptAction(QString action) {
 void WebPage::setPromptText(QString text) {
   m_prompt_text = text;
 }
-
